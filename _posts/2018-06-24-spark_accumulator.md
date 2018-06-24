@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "Vivamus porttitor porta tortor"
+title: "spark 全局变量 accumulator的使用"
 date: 2018-6-24 21:29:50 +0800
 comments: true
 ---
