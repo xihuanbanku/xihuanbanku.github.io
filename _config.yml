@@ -1,7 +1,7 @@
 # Jekyll configuration
 
 name: 小生常谈
-description: 下棋找高手,弄斧到班门。  ---喜欢扮酷
+description: 下棋找高手,弄斧到班门。<br/>  ---喜欢扮酷
 
 # url is currently only used only for the RSS feed in feed.xml
 url: https://xihuanbanku.github.io/jekyll-clean
