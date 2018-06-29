@@ -28,3 +28,26 @@ comments: true
 最后的结果却是正确的。
 后来查找答案, 有一个很重要的前提. accumulator的使用场景适合于对各个partition的累加计数，也就是说想要在 foreachPartition
 处理的过程中使用accum是看不到正确结果的, **在tast中只能对accumulator进行操作, 但是不能读取它的值. 只有driver端才可以读取.** 而且只有最后触发了action操作, 才会进行accumulator的累加, 否则也不会有结果
+
+### 需要注意, 只有在分区以后的rdd中才会发挥accumulator的功能.  
+
+> 比如一下代码，如果此时没有 `sc.parallelize` 那么 `sum_normal` 的输出结果也是正确的
+ 
+```
+    var sum_normal = 0
+    val accumulator = sc.longAccumulator
+
+    val array = Array(1, 2, 3, 4, 5, 6, 7, 8, 9, 10)
+    val parr = sc.parallelize(array, 5)
+    parr.foreach(x => {
+      sum_normal += x
+      accumulator.add(x)
+    })
+
+    println(sum_normal)
+    println(accumulator)
+
+输出结果:
+    0
+    LongAccumulator(id: 0, name: None, value: 55)
+```
