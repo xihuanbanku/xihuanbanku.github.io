@@ -27,4 +27,4 @@ comments: true
 但是在使用debug的时候, 发现虽然设置了初始值624000, 但是在 foreachPartition 中的accum 在断点2处查看结果是0, add以后是1, 且hashcode也与刚初始化时的不一样,
 最后的结果却是正确的。
 后来查找答案, 有一个很重要的前提. accumulator的使用场景适合于对各个partition的累加计数，也就是说想要在 foreachPartition
-处理的过程中使用accum是看不到正确结果的, 而且只有最后触发了action操作, 才会进行accumulator的累加, 否则也不会有结果
+处理的过程中使用accum是看不到正确结果的, **在tast中只能对accumulator进行操作, 但是不能读取它的值.** 而且只有最后触发了action操作, 才会进行accumulator的累加, 否则也不会有结果
