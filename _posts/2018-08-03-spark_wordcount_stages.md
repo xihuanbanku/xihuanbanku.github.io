@@ -1,6 +1,6 @@
 ---
 layout: post
-title: "spark 全局变量 accumulator的使用"
+title: "spark中stage是如何划分的"
 date: 2018-8-3 15:33:30 +0800
 comments: true
 ---
