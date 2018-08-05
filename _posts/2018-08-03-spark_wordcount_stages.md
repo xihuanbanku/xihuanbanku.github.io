@@ -31,3 +31,30 @@ comments: true
 
 ![宽窄依赖原理](../images/2018-08-03-spark_wordcount_stages/spark-stages.jpg "宽窄依赖原理")
 
+* Task的数量
+
+根据类`DAGScheduler`中的`submitMissingTasks`方法可以知道，在`stage`中会为每个需要计算的`partition`生成一个`task`，
+换句话说也就是每个`task`处理一个`partition`.
+
+![task数量](../images/2018-08-03-spark_wordcount_stages/submit_missingtask.png "task数量")
+
+此外, 可以通过设置参数`spark.sql.shuffle.partitions`来指定`task`的数量
+
+* Task的最大并行数
+
+`task`的并行度是根据`cpu`的数量决定的. 当`task`被提交到`executor`之后, 会根据`executor`可用的`cpu`核数, 
+决定一个`executor`中最多同时运行多少个`task`. 在类`TaskSchedulerImpl`的`resourceOfferSingleTaskSet`方法中, 
+`CPUS_PER_TASK`的定义为`val CPUS_PER_TASK = conf.getInt("spark.task.cpus", 1)`, 也就是说默认情况下一个`task`对应`cpu`的一个核. 
+如果一个`executor`可用`cpu`核数为8, 那么一个`executor`中最多同是并发执行8个`task`, 假如设置`spark.task.cpus`为2, 
+那么同时就只能运行4个`task`.
+
+![task并行度](../images/2018-08-03-spark_wordcount_stages/task_parallelism.png "task并行度")
+
+另外, `task`的并行度还与`spark.default.parallelism`参数有关
+
+***
+
+> 参考资料
+
+1. [Spark executor中task的数量与最大并发数](https://www.jianshu.com/p/7c9b08a74de1)
+2. [spark中tasks数量的设置](https://blog.csdn.net/mask1188/article/details/52013828)
