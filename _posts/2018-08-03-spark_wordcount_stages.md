@@ -17,26 +17,26 @@ comments: true
 
 * 首先是`job`的划分
 
-![job组成](../images/2018-08-03-spark_wordcount_stages/Spark-jobs.png "wordcount job0")
+![job组成]({{ site.baseurl}}/images/2018-08-03-spark_wordcount_stages/Spark-jobs.png "wordcount job0")
 
 从图中可以看到`wordcount`只划分了一个`Job0`, 在`spark`中, `job`的数量由该程序中的`action`算子决定,
 也就是说在最后的`collect`算子触发了一个`job`, 如果没有`action`就不会触发`SparkContext`中的`runJob`方法
 
 * `stage`的划分
 
-![stage组成](../images/2018-08-03-spark_wordcount_stages/Screen-Shot-2015-06-19-at-2.00.59-PM.png "wordcount stages")
+![stage组成]({{ site.baseurl}}/images/2018-08-03-spark_wordcount_stages/Screen-Shot-2015-06-19-at-2.00.59-PM.png "wordcount stages")
 
 `stage`的划分是根据`RDD`之间的宽窄依赖判断的, 如果`RDD`之间是宽依赖(后一个`RDD`的产生需要进行`shuffle`操作), 那么这里会产生一个
 `stage`的分界
 
-![宽窄依赖原理](../images/2018-08-03-spark_wordcount_stages/spark-stages.jpg "宽窄依赖原理")
+![宽窄依赖原理]({{ site.baseurl}}/images/2018-08-03-spark_wordcount_stages/spark-stages.jpg "宽窄依赖原理")
 
 * Task的数量
 
 根据类`DAGScheduler`中的`submitMissingTasks`方法可以知道，在`stage`中会为每个需要计算的`partition`生成一个`task`，
 换句话说也就是每个`task`处理一个`partition`.
 
-![task数量](../images/2018-08-03-spark_wordcount_stages/submit_missingtask.png "task数量")
+![task数量]({{ site.baseurl}}/images/2018-08-03-spark_wordcount_stages/submit_missingtask.png "task数量")
 
 此外, 可以通过设置参数`spark.sql.shuffle.partitions`来指定`task`的数量
 
@@ -48,7 +48,7 @@ comments: true
 如果一个`executor`可用`cpu`核数为8, 那么一个`executor`中最多同是并发执行8个`task`, 假如设置`spark.task.cpus`为2, 
 那么同时就只能运行4个`task`.
 
-![task并行度](../images/2018-08-03-spark_wordcount_stages/task_parallelism.png "task并行度")
+![task并行度]({{ site.baseurl}}/images/2018-08-03-spark_wordcount_stages/task_parallelism.png "task并行度")
 
 另外, `task`的并行度还与`spark.default.parallelism`参数有关
 
